@@ -3,98 +3,413 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gallery Furniture Trip - Feb 16, 2026</title>
+  <title>Gallery Furniture Trip - Houston, TX | Feb 16, 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f8f9fa;
-      min-height: 100vh;
-      color: #333;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.6;
     }
+    
+    /* Hero Section */
     .hero {
-      width: 100%;
-      height: 300px;
-      background-image: url('https://picsum.photos/1200/400?random=1');
-      background-size: cover;
-      background-position: center;
+      position: relative;
+      height: 70vh;
+      min-height: 500px;
+      background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.4)),
+                  url('https://picsum.photos/1600/900?random=1') center/cover;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-    }
-    .hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(255,255,255,0.3);
-    }
-    .hero h1 {
-      position: relative;
-      z-index: 1;
-      font-size: 2.5rem;
-      color: #1a1a2e;
-      text-shadow: 0 2px 4px rgba(255,255,255,0.8);
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 2rem;
       text-align: center;
     }
-    .date {
-      font-size: 1.1rem;
-      color: #666;
-      margin-bottom: 2rem;
-    }
-    .card {
-      background: #fff;
-      border-radius: 12px;
+    .hero-content {
+      z-index: 1;
       padding: 2rem;
+      max-width: 800px;
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+    .hero .tagline {
+      font-size: 1.4rem;
+      color: #e2e8f0;
       margin-bottom: 1.5rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
-    .location {
-      font-size: 1.2rem;
+    .hero .date-badge {
+      display: inline-block;
+      background: #f59e0b;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+    }
+
+    /* Section Styles */
+    section {
+      padding: 5rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    section h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: #0f172a;
+      text-align: center;
+    }
+    
+    /* About Section */
+    .about {
+      background: #fff;
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .about-text p {
+      margin-bottom: 1.5rem;
+      color: #475569;
+    }
+    .about-text .highlight {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #f59e0b;
+    }
+    .about-image img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    /* Itinerary Section */
+    .itinerary {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    }
+    .timeline {
+      position: relative;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3px;
+      height: 100%;
+      background: #f59e0b;
+    }
+    .timeline-item {
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 50%;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .timeline-item:nth-child(even) {
+      justify-content: flex-start;
+      padding-right: 0;
+      padding-left: 50%;
+    }
+    .timeline-item .time {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #f59e0b;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    .timeline-item .content {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      margin: 0 2rem;
+    }
+    .timeline-item .content h3 {
+      font-size: 1.1rem;
       margin-bottom: 0.5rem;
-      color: #1a1a2e;
     }
-    .address {
-      color: #888;
+    .timeline-item .content p {
+      color: #64748b;
       font-size: 0.95rem;
     }
-    .description {
-      color: #555;
-      line-height: 1.6;
+
+    /* What to Expect */
+    .expect {
+      background: #fff;
     }
-    .badge {
-      display: inline-block;
-      background: #f0a500;
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    .feature-card {
+      text-align: center;
+      padding: 2rem;
+      background: #f8fafc;
+      border-radius: 12px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .feature-card .icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .feature-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+    }
+    .feature-card p {
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
+    /* Gallery */
+    .gallery {
+      background: #0f172a;
       color: #fff;
-      padding: 0.6rem 1.2rem;
-      border-radius: 25px;
+    }
+    .gallery h2 {
+      color: #fff;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    .gallery-grid img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      transition: transform 0.3s;
+    }
+    .gallery-grid img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Location Card */
+    .location-section {
+      background: #fff;
+      text-align: center;
+    }
+    .location-card {
+      display: inline-block;
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      color: #fff;
+      padding: 2.5rem 3rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    }
+    .location-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+    .location-card .address {
+      color: #94a3b8;
+      margin-bottom: 1rem;
+    }
+    .location-card .btn {
+      display: inline-block;
+      background: #f59e0b;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
       font-weight: 600;
       margin-top: 1rem;
-      box-shadow: 0 2px 6px rgba(240,165,0,0.3);
+      transition: background 0.3s;
+    }
+    .location-card .btn:hover {
+      background: #d97706;
+    }
+
+    /* Footer */
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.5rem; }
+      .about-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .timeline::before { left: 20px; }
+      .timeline-item, .timeline-item:nth-child(even) {
+        padding-left: 60px;
+        padding-right: 0;
+        justify-content: flex-start;
+      }
+      .timeline-item .time { left: 20px; transform: translateX(-50%); }
     }
   </style>
 </head>
 <body>
-  <div class="hero">
-    <h1>🪑 Gallery Furniture Trip</h1>
-  </div>
-  
-  <div class="container">
-    <p class="date">Monday, February 16, 2026</p>
-    
-    <div class="card">
-      <p class="location">📍 North Freeway Location</p>
-      <p class="address">6006 North Freeway, Houston, TX 77076</p>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-content">
+      <h1>🪑 Gallery Furniture Trip</h1>
+      <p class="tagline">Houston's legendary furniture destination awaits</p>
+      <span class="date-badge">📅 Monday, February 16, 2026</span>
     </div>
-    
-    <p class="description">Flying in from Kentucky for a day of furniture browsing and Texas hospitality.</p>
-    
-    <span class="badge">Houston Bound ✈️</span>
-  </div>
+  </header>
+
+  <!-- About Section -->
+  <section class="about">
+    <h2>About Gallery Furniture</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p class="highlight">"Gallery Furniture will save you money!"</p>
+        <p>Gallery Furniture is a Houston icon, famous for its charismatic founder <strong>"Mattress Mack"</strong> (Jim McIngvale) and his legendary commercials that have become part of Texas pop culture.</p>
+        <p>Known for outrageous promotions, community generosity, and an unmatched selection of quality furniture, this isn't just a shopping trip — it's a Houston experience.</p>
+        <p>The North Freeway location spans over 100,000 square feet of showrooms featuring everything from living room sets to mattresses, home office furniture to outdoor collections.</p>
+      </div>
+      <div class="about-image">
+        <img src="https://picsum.photos/600/400?random=2" alt="Furniture showroom">
+      </div>
+    </div>
+  </section>
+
+  <!-- Itinerary -->
+  <section class="itinerary">
+    <h2>📅 Trip Itinerary</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <span class="time">6:00 AM</span>
+        <div class="content">
+          <h3>✈️ Depart Louisville</h3>
+          <p>United 6266 to Houston (IAH)</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="time">8:15 AM</span>
+        <div class="content">
+          <h3>🛬 Arrive in Houston</h3>
+          <p>Touch down at Bush Intercontinental</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="time">9:30 AM</span>
+        <div class="content">
+          <h3>☕ Breakfast Stop</h3>
+          <p>Quick bite before the main event</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="time">10:30 AM</span>
+        <div class="content">
+          <h3>🪑 Gallery Furniture</h3>
+          <p>Browsing the legendary showrooms</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="time">1:00 PM</span>
+        <div class="content">
+          <h3>🦐 Lunch Break</h3>
+          <p>Houston seafood or Tex-Mex nearby</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="time">3:00 PM</span>
+        <div class="content">
+          <h3>🛍️ Final Browsing</h3>
+          <p>Last looks before heading back</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What to Expect -->
+  <section class="expect">
+    <h2>What to Expect</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="icon">🏆</div>
+        <h3>Legendary Service</h3>
+        <p>The famous Gallery Furniture team known for going above and beyond</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📦</div>
+        <h3>Huge Selection</h3>
+        <p>Over 100,000 sq ft of quality furniture and home décor</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">💰</div>
+        <h3>Great Prices</h3>
+        <p>"Save You Money" isn't just a slogan — it's their promise</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🚚</div>
+        <h3>Same-Day Delivery</h3>
+        <p>Incredible delivery options for Houston-area customers</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🎭</div>
+        <h3>Texas Charm</h3>
+        <p>Experience authentic Houston hospitality at its finest</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📸</div>
+        <h3>Photo Ops</h3>
+        <p>Don't miss the iconic signage and colorful displays</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="gallery">
+    <h2>Photo Gallery</h2>
+    <div class="gallery-grid">
+      <img src="https://picsum.photos/400/300?random=10" alt="Gallery photo">
+      <img src="https://picsum.photos/400/300?random=11" alt="Gallery photo">
+      <img src="https://picsum.photos/400/300?random=12" alt="Gallery photo">
+      <img src="https://picsum.photos/400/300?random=13" alt="Gallery photo">
+      <img src="https://picsum.photos/400/300?random=14" alt="Gallery photo">
+      <img src="https://picsum.photos/400/300?random=15" alt="Gallery photo">
+      <img src="https://picsum.photos/400/300?random=16" alt="Gallery photo">
+      <img src="https://picsum.photos/400/300?random=17" alt="Gallery photo">
+    </div>
+  </section>
+
+  <!-- Location -->
+  <section class="location-section">
+    <div class="location-card">
+      <h3>📍 North Freeway Location</h3>
+      <p class="address">6006 North Freeway, Houston, TX 77076</p>
+      <p>Open Daily: 10:00 AM - 7:00 PM</p>
+      <a href="https://maps.google.com/?q=Gallery+Furniture+6006+North+Freeway+Houston+TX" target="_blank" class="btn">Get Directions</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>🪑 Gallery Furniture Trip • February 16, 2026 • Flying in from Kentucky</p>
+  </footer>
+
 </body>
 </html>

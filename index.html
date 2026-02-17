@@ -4,70 +4,243 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gallery Furniture Trip - Houston, TX | Feb 16, 2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: #f8fafc;
       color: #1e293b;
       line-height: 1.6;
+      overflow-x: hidden;
     }
-    
+
+    /* Sticky Nav */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.4s, box-shadow 0.4s, padding 0.4s;
+    }
+    .nav.scrolled {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+      padding: 0.6rem 2rem;
+    }
+    .nav-logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.4s;
+    }
+    .nav.scrolled .nav-logo { color: #0f172a; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .nav.scrolled .nav-links a { color: #475569; }
+    .nav-links a:hover { color: #f59e0b; }
+
     /* Hero Section */
     .hero {
       position: relative;
-      height: 70vh;
-      min-height: 500px;
-      background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.4)),
-                  url('https://picsum.photos/1600/900?random=1') center/cover;
+      height: 100vh;
+      min-height: 600px;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('https://picsum.photos/1600/900?random=1') center/cover;
+      transform: scale(1.1);
+      transition: transform 0.3s;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.75) 0%,
+        rgba(30, 58, 95, 0.55) 40%,
+        rgba(245, 158, 11, 0.3) 100%
+      );
     }
     .hero-content {
+      position: relative;
       z-index: 1;
       padding: 2rem;
-      max-width: 800px;
+      max-width: 850px;
     }
     .hero h1 {
-      font-size: 3.5rem;
-      font-weight: 700;
+      font-size: 4rem;
+      font-weight: 800;
       color: #fff;
       margin-bottom: 1rem;
-      text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+      text-shadow: 0 4px 30px rgba(0,0,0,0.3);
+      letter-spacing: -0.02em;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: heroFadeUp 1s ease forwards 0.3s;
     }
     .hero .tagline {
       font-size: 1.4rem;
       color: #e2e8f0;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: heroFadeUp 1s ease forwards 0.6s;
     }
     .hero .date-badge {
       display: inline-block;
-      background: #f59e0b;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
       color: #fff;
-      padding: 0.75rem 1.5rem;
+      padding: 0.75rem 2rem;
       border-radius: 50px;
       font-weight: 600;
       font-size: 1rem;
-      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+      box-shadow: 0 4px 25px rgba(245, 158, 11, 0.5);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: heroFadeUp 1s ease forwards 0.9s;
+    }
+
+    /* Countdown */
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: heroFadeUp 1s ease forwards 1.2s;
+    }
+    .countdown-unit {
+      text-align: center;
+    }
+    .countdown-number {
+      display: block;
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+      text-shadow: 0 2px 15px rgba(0,0,0,0.3);
+    }
+    .countdown-label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.25rem;
+    }
+    .countdown-sep {
+      font-size: 2rem;
+      color: rgba(255,255,255,0.4);
+      align-self: flex-start;
+      margin-top: 0.3rem;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      animation: bounce 2s infinite;
+    }
+    .scroll-indicator span {
+      display: block;
+      width: 24px;
+      height: 24px;
+      border-bottom: 2px solid rgba(255,255,255,0.6);
+      border-right: 2px solid rgba(255,255,255,0.6);
+      transform: rotate(45deg);
+    }
+
+    @keyframes heroFadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+      40% { transform: translateX(-50%) translateY(-10px); }
+      60% { transform: translateX(-50%) translateY(-5px); }
+    }
+
+    /* Scroll Animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-in-left {
+      opacity: 0;
+      transform: translateX(-50px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .fade-in-right {
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .scale-in {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .scale-in.visible {
+      opacity: 1;
+      transform: scale(1);
     }
 
     /* Section Styles */
     section {
-      padding: 5rem 2rem;
+      padding: 6rem 2rem;
       max-width: 1100px;
       margin: 0 auto;
     }
+    .full-width { max-width: 100%; }
     section h2 {
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: 700;
-      margin-bottom: 2rem;
+      margin-bottom: 0.75rem;
       color: #0f172a;
       text-align: center;
     }
-    
+    .section-subtitle {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 3rem;
+      font-size: 1.05rem;
+    }
+
     /* About Section */
     .about {
       background: #fff;
@@ -83,14 +256,27 @@
       color: #475569;
     }
     .about-text .highlight {
-      font-size: 1.1rem;
-      font-weight: 600;
+      font-size: 1.2rem;
+      font-weight: 700;
       color: #f59e0b;
+      font-style: italic;
+    }
+    .about-image {
+      position: relative;
     }
     .about-image img {
       width: 100%;
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    }
+    .about-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      border: 2px solid rgba(245,158,11,0.2);
+      transform: translate(12px, 12px);
+      z-index: -1;
     }
 
     /* Itinerary Section */
@@ -109,7 +295,8 @@
       transform: translateX(-50%);
       width: 3px;
       height: 100%;
-      background: #f59e0b;
+      background: linear-gradient(to bottom, #f59e0b, #d97706);
+      border-radius: 3px;
     }
     .timeline-item {
       display: flex;
@@ -127,20 +314,26 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      background: #f59e0b;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
       color: #fff;
       padding: 0.5rem 1rem;
       border-radius: 20px;
       font-weight: 600;
       font-size: 0.9rem;
       white-space: nowrap;
+      box-shadow: 0 3px 10px rgba(245,158,11,0.3);
     }
     .timeline-item .content {
       background: #fff;
       padding: 1.5rem;
       border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       margin: 0 2rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .timeline-item .content:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
     }
     .timeline-item .content h3 {
       font-size: 1.1rem;
@@ -162,18 +355,25 @@
     }
     .feature-card {
       text-align: center;
-      padding: 2rem;
+      padding: 2.5rem 2rem;
       background: #f8fafc;
-      border-radius: 12px;
-      transition: transform 0.3s, box-shadow 0.3s;
+      border-radius: 16px;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      border: 1px solid transparent;
     }
     .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border-color: rgba(245,158,11,0.2);
     }
     .feature-card .icon {
       font-size: 3rem;
       margin-bottom: 1rem;
+      display: inline-block;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover .icon {
+      transform: scale(1.15);
     }
     .feature-card h3 {
       font-size: 1.2rem;
@@ -188,24 +388,139 @@
     .gallery {
       background: #0f172a;
       color: #fff;
+      padding: 6rem 2rem;
     }
     .gallery h2 {
       color: #fff;
+    }
+    .gallery .section-subtitle {
+      color: #94a3b8;
     }
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1rem;
+      max-width: 1100px;
+      margin: 0 auto;
     }
-    .gallery-grid img {
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .gallery-item img {
       width: 100%;
-      height: 200px;
+      height: 220px;
       object-fit: cover;
-      border-radius: 8px;
-      transition: transform 0.3s;
+      transition: transform 0.5s ease;
+      display: block;
     }
-    .gallery-grid img:hover {
-      transform: scale(1.05);
+    .gallery-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.1);
+    }
+    .gallery-item:hover::after {
+      opacity: 1;
+    }
+    .gallery-item .zoom-icon {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      z-index: 2;
+      color: #fff;
+      font-size: 1.4rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .gallery-item:hover .zoom-icon {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s, visibility 0.4s;
+      backdrop-filter: blur(10px);
+    }
+    .lightbox.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .lightbox img {
+      max-width: 85vw;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.5);
+      transform: scale(0.9);
+      transition: transform 0.4s ease;
+    }
+    .lightbox.active img {
+      transform: scale(1);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.3s;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.1); }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.3s;
+    }
+    .lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+    .lightbox-prev { left: 1.5rem; }
+    .lightbox-next { right: 1.5rem; }
+    .lightbox-counter {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.6);
+      font-size: 0.9rem;
     }
 
     /* Location Card */
@@ -217,12 +532,17 @@
       display: inline-block;
       background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
       color: #fff;
-      padding: 2.5rem 3rem;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      padding: 3rem 4rem;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+    .location-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.2);
     }
     .location-card h3 {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       margin-bottom: 0.5rem;
     }
     .location-card .address {
@@ -231,17 +551,19 @@
     }
     .location-card .btn {
       display: inline-block;
-      background: #f59e0b;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
       color: #fff;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
       text-decoration: none;
       font-weight: 600;
-      margin-top: 1rem;
-      transition: background 0.3s;
+      margin-top: 1.5rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(245,158,11,0.3);
     }
     .location-card .btn:hover {
-      background: #d97706;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(245,158,11,0.5);
     }
 
     /* Footer */
@@ -249,12 +571,14 @@
       background: #0f172a;
       color: #94a3b8;
       text-align: center;
-      padding: 2rem;
+      padding: 2.5rem;
       font-size: 0.9rem;
     }
 
     @media (max-width: 768px) {
       .hero h1 { font-size: 2.5rem; }
+      .countdown-number { font-size: 2rem; }
+      .countdown { gap: 1rem; }
       .about-grid { grid-template-columns: 1fr; }
       .features-grid { grid-template-columns: 1fr; }
       .gallery-grid { grid-template-columns: repeat(2, 1fr); }
@@ -265,79 +589,119 @@
         justify-content: flex-start;
       }
       .timeline-item .time { left: 20px; transform: translateX(-50%); }
+      .nav-links { display: none; }
+      .location-card { padding: 2rem; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <a href="#" class="nav-logo">Gallery Furniture Trip</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#itinerary">Itinerary</a></li>
+      <li><a href="#expect">What to Expect</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#location">Location</a></li>
+    </ul>
+  </nav>
+
   <!-- Hero -->
   <header class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
     <div class="hero-content">
-      <h1>🪑 Gallery Furniture Trip</h1>
+      <h1>Gallery Furniture Trip</h1>
       <p class="tagline">Houston's legendary furniture destination awaits</p>
-      <span class="date-badge">📅 Monday, February 16, 2026</span>
+      <span class="date-badge">Monday, February 16, 2026</span>
+      <div class="countdown" id="countdown">
+        <div class="countdown-unit">
+          <span class="countdown-number" id="cd-days">00</span>
+          <span class="countdown-label">Days</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-unit">
+          <span class="countdown-number" id="cd-hours">00</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-unit">
+          <span class="countdown-number" id="cd-minutes">00</span>
+          <span class="countdown-label">Minutes</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-unit">
+          <span class="countdown-number" id="cd-seconds">00</span>
+          <span class="countdown-label">Seconds</span>
+        </div>
+      </div>
     </div>
+    <div class="scroll-indicator"><span></span></div>
   </header>
 
   <!-- About Section -->
-  <section class="about">
-    <h2>About Gallery Furniture</h2>
+  <section class="about" id="about">
+    <h2 class="fade-in">About Gallery Furniture</h2>
+    <p class="section-subtitle fade-in">A Houston icon since 1981</p>
     <div class="about-grid">
-      <div class="about-text">
+      <div class="about-text fade-in-left">
         <p class="highlight">"Gallery Furniture will save you money!"</p>
         <p>Gallery Furniture is a Houston icon, famous for its charismatic founder <strong>"Mattress Mack"</strong> (Jim McIngvale) and his legendary commercials that have become part of Texas pop culture.</p>
         <p>Known for outrageous promotions, community generosity, and an unmatched selection of quality furniture, this isn't just a shopping trip — it's a Houston experience.</p>
         <p>The North Freeway location spans over 100,000 square feet of showrooms featuring everything from living room sets to mattresses, home office furniture to outdoor collections.</p>
       </div>
-      <div class="about-image">
+      <div class="about-image fade-in-right">
         <img src="https://picsum.photos/600/400?random=2" alt="Furniture showroom">
       </div>
     </div>
   </section>
 
   <!-- Itinerary -->
-  <section class="itinerary">
-    <h2>📅 Trip Itinerary</h2>
+  <section class="itinerary full-width" id="itinerary">
+    <h2 class="fade-in">Trip Itinerary</h2>
+    <p class="section-subtitle fade-in">Your day-by-day adventure plan</p>
     <div class="timeline">
-      <div class="timeline-item">
+      <div class="timeline-item fade-in">
         <span class="time">6:00 AM</span>
         <div class="content">
-          <h3>✈️ Depart Louisville</h3>
+          <h3>Depart Louisville</h3>
           <p>United 6266 to Houston (IAH)</p>
         </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item fade-in">
         <span class="time">8:15 AM</span>
         <div class="content">
-          <h3>🛬 Arrive in Houston</h3>
+          <h3>Arrive in Houston</h3>
           <p>Touch down at Bush Intercontinental</p>
         </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item fade-in">
         <span class="time">9:30 AM</span>
         <div class="content">
-          <h3>☕ Breakfast Stop</h3>
+          <h3>Breakfast Stop</h3>
           <p>Quick bite before the main event</p>
         </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item fade-in">
         <span class="time">10:30 AM</span>
         <div class="content">
-          <h3>🪑 Gallery Furniture</h3>
+          <h3>Gallery Furniture</h3>
           <p>Browsing the legendary showrooms</p>
         </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item fade-in">
         <span class="time">1:00 PM</span>
         <div class="content">
-          <h3>🦐 Lunch Break</h3>
+          <h3>Lunch Break</h3>
           <p>Houston seafood or Tex-Mex nearby</p>
         </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item fade-in">
         <span class="time">3:00 PM</span>
         <div class="content">
-          <h3>🛍️ Final Browsing</h3>
+          <h3>Final Browsing</h3>
           <p>Last looks before heading back</p>
         </div>
       </div>
@@ -345,35 +709,36 @@
   </section>
 
   <!-- What to Expect -->
-  <section class="expect">
-    <h2>What to Expect</h2>
+  <section class="expect" id="expect">
+    <h2 class="fade-in">What to Expect</h2>
+    <p class="section-subtitle fade-in">Everything that makes this trip special</p>
     <div class="features-grid">
-      <div class="feature-card">
+      <div class="feature-card scale-in">
         <div class="icon">🏆</div>
         <h3>Legendary Service</h3>
         <p>The famous Gallery Furniture team known for going above and beyond</p>
       </div>
-      <div class="feature-card">
+      <div class="feature-card scale-in">
         <div class="icon">📦</div>
         <h3>Huge Selection</h3>
-        <p>Over 100,000 sq ft of quality furniture and home décor</p>
+        <p>Over 100,000 sq ft of quality furniture and home decor</p>
       </div>
-      <div class="feature-card">
+      <div class="feature-card scale-in">
         <div class="icon">💰</div>
         <h3>Great Prices</h3>
         <p>"Save You Money" isn't just a slogan — it's their promise</p>
       </div>
-      <div class="feature-card">
+      <div class="feature-card scale-in">
         <div class="icon">🚚</div>
         <h3>Same-Day Delivery</h3>
         <p>Incredible delivery options for Houston-area customers</p>
       </div>
-      <div class="feature-card">
+      <div class="feature-card scale-in">
         <div class="icon">🎭</div>
         <h3>Texas Charm</h3>
         <p>Experience authentic Houston hospitality at its finest</p>
       </div>
-      <div class="feature-card">
+      <div class="feature-card scale-in">
         <div class="icon">📸</div>
         <h3>Photo Ops</h3>
         <p>Don't miss the iconic signage and colorful displays</p>
@@ -382,24 +747,60 @@
   </section>
 
   <!-- Gallery -->
-  <section class="gallery">
-    <h2>Photo Gallery</h2>
+  <section class="gallery full-width" id="gallery">
+    <h2 class="fade-in">Photo Gallery</h2>
+    <p class="section-subtitle fade-in">A preview of what's in store</p>
     <div class="gallery-grid">
-      <img src="https://picsum.photos/400/300?random=10" alt="Gallery photo">
-      <img src="https://picsum.photos/400/300?random=11" alt="Gallery photo">
-      <img src="https://picsum.photos/400/300?random=12" alt="Gallery photo">
-      <img src="https://picsum.photos/400/300?random=13" alt="Gallery photo">
-      <img src="https://picsum.photos/400/300?random=14" alt="Gallery photo">
-      <img src="https://picsum.photos/400/300?random=15" alt="Gallery photo">
-      <img src="https://picsum.photos/400/300?random=16" alt="Gallery photo">
-      <img src="https://picsum.photos/400/300?random=17" alt="Gallery photo">
+      <div class="gallery-item scale-in" onclick="openLightbox(0)">
+        <img src="https://picsum.photos/400/300?random=10" alt="Gallery photo 1">
+        <span class="zoom-icon">&#x1F50D;</span>
+      </div>
+      <div class="gallery-item scale-in" onclick="openLightbox(1)">
+        <img src="https://picsum.photos/400/300?random=11" alt="Gallery photo 2">
+        <span class="zoom-icon">&#x1F50D;</span>
+      </div>
+      <div class="gallery-item scale-in" onclick="openLightbox(2)">
+        <img src="https://picsum.photos/400/300?random=12" alt="Gallery photo 3">
+        <span class="zoom-icon">&#x1F50D;</span>
+      </div>
+      <div class="gallery-item scale-in" onclick="openLightbox(3)">
+        <img src="https://picsum.photos/400/300?random=13" alt="Gallery photo 4">
+        <span class="zoom-icon">&#x1F50D;</span>
+      </div>
+      <div class="gallery-item scale-in" onclick="openLightbox(4)">
+        <img src="https://picsum.photos/400/300?random=14" alt="Gallery photo 5">
+        <span class="zoom-icon">&#x1F50D;</span>
+      </div>
+      <div class="gallery-item scale-in" onclick="openLightbox(5)">
+        <img src="https://picsum.photos/400/300?random=15" alt="Gallery photo 6">
+        <span class="zoom-icon">&#x1F50D;</span>
+      </div>
+      <div class="gallery-item scale-in" onclick="openLightbox(6)">
+        <img src="https://picsum.photos/400/300?random=16" alt="Gallery photo 7">
+        <span class="zoom-icon">&#x1F50D;</span>
+      </div>
+      <div class="gallery-item scale-in" onclick="openLightbox(7)">
+        <img src="https://picsum.photos/400/300?random=17" alt="Gallery photo 8">
+        <span class="zoom-icon">&#x1F50D;</span>
+      </div>
     </div>
   </section>
 
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <button class="lightbox-nav lightbox-prev" onclick="navLightbox(event, -1)">&#8249;</button>
+    <img id="lightbox-img" src="" alt="Gallery photo expanded">
+    <button class="lightbox-nav lightbox-next" onclick="navLightbox(event, 1)">&#8250;</button>
+    <span class="lightbox-counter" id="lightbox-counter"></span>
+  </div>
+
   <!-- Location -->
-  <section class="location-section">
-    <div class="location-card">
-      <h3>📍 North Freeway Location</h3>
+  <section class="location-section" id="location">
+    <h2 class="fade-in">Destination</h2>
+    <p class="section-subtitle fade-in">Where we're headed</p>
+    <div class="location-card scale-in">
+      <h3>North Freeway Location</h3>
       <p class="address">6006 North Freeway, Houston, TX 77076</p>
       <p>Open Daily: 10:00 AM - 7:00 PM</p>
       <a href="https://maps.google.com/?q=Gallery+Furniture+6006+North+Freeway+Houston+TX" target="_blank" class="btn">Get Directions</a>
@@ -408,8 +809,119 @@
 
   <!-- Footer -->
   <footer>
-    <p>🪑 Gallery Furniture Trip • February 16, 2026 • Flying in from Kentucky</p>
+    <p>Gallery Furniture Trip &bull; February 16, 2026 &bull; Flying in from Kentucky</p>
   </footer>
+
+  <script>
+    // Countdown Timer
+    function updateCountdown() {
+      const tripDate = new Date('2026-02-16T06:00:00-05:00');
+      const now = new Date();
+      const diff = tripDate - now;
+
+      if (diff <= 0) {
+        document.getElementById('countdown').innerHTML = '<p style="color:#f59e0b;font-weight:700;font-size:1.3rem;">The trip is here! 🎉</p>';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+      document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('cd-seconds').textContent = String(seconds).padStart(2, '0');
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // Scroll Animations (Intersection Observer)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          // Stagger animations for siblings
+          const parent = entry.target.parentElement;
+          const siblings = Array.from(parent.children).filter(el =>
+            el.classList.contains('fade-in') ||
+            el.classList.contains('fade-in-left') ||
+            el.classList.contains('fade-in-right') ||
+            el.classList.contains('scale-in')
+          );
+          const idx = siblings.indexOf(entry.target);
+          const delay = idx >= 0 ? idx * 100 : 0;
+
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, delay);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right, .scale-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Nav scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Parallax hero background
+    window.addEventListener('scroll', () => {
+      const hero = document.querySelector('.hero-bg');
+      if (hero) {
+        const scroll = window.scrollY;
+        hero.style.transform = `scale(1.1) translateY(${scroll * 0.3}px)`;
+      }
+    });
+
+    // Lightbox
+    const galleryImages = [
+      'https://picsum.photos/1200/800?random=10',
+      'https://picsum.photos/1200/800?random=11',
+      'https://picsum.photos/1200/800?random=12',
+      'https://picsum.photos/1200/800?random=13',
+      'https://picsum.photos/1200/800?random=14',
+      'https://picsum.photos/1200/800?random=15',
+      'https://picsum.photos/1200/800?random=16',
+      'https://picsum.photos/1200/800?random=17',
+    ];
+    let currentLightbox = 0;
+
+    function openLightbox(index) {
+      currentLightbox = index;
+      const lb = document.getElementById('lightbox');
+      document.getElementById('lightbox-img').src = galleryImages[index];
+      document.getElementById('lightbox-counter').textContent = `${index + 1} / ${galleryImages.length}`;
+      lb.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox(e) {
+      if (e && e.target !== e.currentTarget) return;
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function navLightbox(e, dir) {
+      e.stopPropagation();
+      currentLightbox = (currentLightbox + dir + galleryImages.length) % galleryImages.length;
+      document.getElementById('lightbox-img').src = galleryImages[currentLightbox];
+      document.getElementById('lightbox-counter').textContent = `${currentLightbox + 1} / ${galleryImages.length}`;
+    }
+
+    // Keyboard nav for lightbox
+    document.addEventListener('keydown', (e) => {
+      const lb = document.getElementById('lightbox');
+      if (!lb.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') navLightbox(e, -1);
+      if (e.key === 'ArrowRight') navLightbox(e, 1);
+    });
+  </script>
 
 </body>
 </html>
